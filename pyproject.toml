@@ -10,6 +10,7 @@ dependencies = [
     "fastapi[standard]>=0.141.1",
     "uvicorn>=0.52.2",
     "msgpack>=1.2.1",
+    "setuptools >= 78.1.1"
 ]
 
 
