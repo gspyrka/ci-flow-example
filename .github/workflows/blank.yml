@@ -31,7 +31,7 @@ jobs:
       uses: docker/build-push-action@v7
       with:
         load: true
-        tags: sample-api
+        tags: sample-api-${GITHUB_SHA::7}
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@v0.36.0
       with:
