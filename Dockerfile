@@ -18,9 +18,8 @@ FROM python:3.14.6-slim-trixie as runner
 RUN groupadd --system --gid 999 nonroot \
  && useradd --system --gid 999 --uid 999 --create-home nonroot
 
-#COPY --from=builder --chown=nonroot:nonroot /app /app
 COPY --from=builder --chown=nonroot:nonroot /app/.venv /app/.venv
-COPY --from=builder --chown=nonroot:nonroot /app/src/sample_api /app/src/sample_api
+COPY --from=builder --chown=nonroot:nonroot /app/src /app/src
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
