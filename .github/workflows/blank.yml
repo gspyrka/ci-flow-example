@@ -36,15 +36,6 @@ jobs:
         load: true
         tags: sample-api-${{ github.sha }}
 
-    - name: Trivy debug
-      uses: aquasecurity/trivy-action@v0.36.0
-      with:
-        image-ref: sample-api-${{ github.sha }}
-    - name: Trivy debug
-      uses: aquasecurity/trivy-action@v0.36.0
-      with:
-        image-ref: ghcr.io/astral-sh/uv:python3.14-trixie-slim
-    - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@v0.36.0
       with:
         image-ref: sample-api-${{ github.sha }}
