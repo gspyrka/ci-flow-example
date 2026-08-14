@@ -1,13 +1,15 @@
+import json
 import logging
 import sys
-import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from fastapi import FastAPI, Request
+
 
 class JSONFormatter(logging.Formatter):
     def format(self, record):
         log_record = {
-            "@timestamp": datetime.now(timezone.utc).isoformat(),
+            "@timestamp": datetime.now(UTC).isoformat(),
             "log.level": record.levelname.lower(),
             "message": record.getMessage(),
             "service.name": "proste-api",
@@ -32,12 +34,12 @@ app = FastAPI(title="Elastic JSON API", version="1.0")
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
-    start_time = datetime.now(timezone.utc)
+    start_time = datetime.now(UTC)
     response = await call_next(request)
-    duration = (datetime.now(timezone.utc) - start_time).total_seconds()
+    duration = (datetime.now(UTC) - start_time).total_seconds()
 
     logger.info(
-        f"HTTP request handled",
+        "HTTP request handled",
         extra={
             "http_method": request.method,
             "http_path": request.url.path,
@@ -58,6 +60,6 @@ def read_item(item_id: int):
     return {"item_id": item_id, "name": "Przykładowy przedmiot"}
 
 @app.get("/healtz")
-def read_item():
-    logger.info(f"Healtcheck")
+def healtz():
+    logger.info("Healtcheck")
     return {""}
