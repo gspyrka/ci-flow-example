@@ -20,7 +20,7 @@ RUN groupadd --system --gid 999 nonroot \
 
 #COPY --from=builder --chown=nonroot:nonroot /app /app
 COPY --from=builder --chown=nonroot:nonroot /app/.venv /app/.venv
-COPY --from=builder --chown=nonroot:nonroot /app/sample_api /app/sample_api
+COPY --from=builder --chown=nonroot:nonroot /app/src/sample_api /app/src/sample_api
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
