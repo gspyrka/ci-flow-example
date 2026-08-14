@@ -13,7 +13,7 @@ COPY . /app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked
 
-FROM python:3.14.6-slim-trixie as runner
+FROM python:3.14.6-slim-trixie AS runner
 
 RUN groupadd --system --gid 999 nonroot \
  && useradd --system --gid 999 --uid 999 --create-home nonroot
