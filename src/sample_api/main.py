@@ -3,7 +3,6 @@ import sys
 import json
 from datetime import datetime, timezone
 from fastapi import FastAPI, Request
-import uvicorn
 
 class JSONFormatter(logging.Formatter):
     def format(self, record):
@@ -30,12 +29,6 @@ logger.handlers = [handler]
 logger.propagate = False
 
 app = FastAPI(title="Elastic JSON API", version="1.0")
-
-# def main():
-#     uvicorn.run("sample_api.main:app", host="0.0.0.0", port=8000, reload=True)
-
-# if __name__ == "__main__":
-#     main()
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
