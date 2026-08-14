@@ -35,20 +35,17 @@ jobs:
       with:
         load: true
         tags: sample-api-${{ github.sha }}
-    - name: Inspect image Python packages
-      run: |
-        docker run --rm sample-api-${{ github.sha }} python -c '
-        import msgpack, setuptools
-        print("msgpack:", msgpack.__version__)
-        print("setuptools:", setuptools.__version__)
-        '
+    - name: Trivy version
+      run: trivy version
 
-        docker run --rm sample-api-${{ github.sha }} sh -c '
-          find / -type f \( \
-            -path "*/msgpack-*.dist-info/METADATA" -o \
-            -path "*/setuptools-*.dist-info/METADATA" \
-          \) 2>/dev/null
-        '
+    - name: Trivy debug
+      run: |
+        trivy image --debug --no-progress "sample-api-${{ github.sha }}" 2>&1 \
+          | grep -E 'msgpack|setuptools|1\.1\.2|70\.3\.0'
+    - name: Trivy debug
+      run: |
+        trivy image --debug --no-progress "ghcr.io/astral-sh/uv:python3.14-trixie-slim" 2>&1 \
+          | grep -E 'msgpack|setuptools|1\.1\.2|70\.3\.0'
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@v0.36.0
       with:
