@@ -63,4 +63,3 @@ def read_item(item_id: int):
 def healtz():
     logger.info("Healtcheck")
     return {""}
-#test
