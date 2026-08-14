@@ -35,6 +35,20 @@ jobs:
       with:
         load: true
         tags: sample-api-${{ github.sha }}
+    - name: Inspect image Python packages
+      run: |
+        docker run --rm sample-api-${{ github.sha }} python -c '
+        import msgpack, setuptools
+        print("msgpack:", msgpack.__version__)
+        print("setuptools:", setuptools.__version__)
+        '
+
+        docker run --rm sample-api-${{ github.sha }} sh -c '
+          find / -type f \( \
+            -path "*/msgpack-*.dist-info/METADATA" -o \
+            -path "*/setuptools-*.dist-info/METADATA" \
+          \) 2>/dev/null
+        '
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@v0.36.0
       with:
