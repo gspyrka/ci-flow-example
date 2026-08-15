@@ -68,7 +68,6 @@ jobs:
     steps:
     - name: Deploy prod environment
       run: "dasdass echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to prod environment"
-      run: dasdass
     - name: Rollback
       if: failure()
       run: echo "Deployment failed! Rollback completed successfully."
