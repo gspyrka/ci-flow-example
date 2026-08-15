@@ -67,8 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deploy prod environment
-      run: "echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to prod environment"
-      run: dasdass
+      run: "dasdass echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to prod environment"
     - name: Rollback
       if: failure()
       run: echo "Deployment failed! Rollback completed successfully."
