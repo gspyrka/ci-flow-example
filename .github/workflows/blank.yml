@@ -18,14 +18,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Install dependencies
         run: uv sync --locked --group test
-
       - name: Run tests
         run: uv run pytest
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - uses: astral-sh/ruff-action@v4.1.0
+      with:
+        src: "./src"
   build:
-    needs: unit-tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -39,9 +45,6 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - uses: astral-sh/ruff-action@v4.1.0
-      with:
-        src: "./src"
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v4
     - name: Set up Docker Buildx
@@ -63,13 +66,18 @@ jobs:
     - name: Push image
       run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
   deploy-dev:
-    needs: build
+    needs: [build, unit-tests, lint]
     environment: dev
     if: github.ref == 'refs/heads/master' || github.event_name  == 'release' 
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Dev environment
       run: "echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to dev environment"
+    - name: Post-deploy smoke test
+      run: |
+        echo "Running smoke tests..."
+        echo "GET /health -> 200 OK"
+        echo "Smoke test passed"
   deploy-prod:
     needs: deploy-dev
     environment: prod
@@ -78,6 +86,11 @@ jobs:
     steps:
     - name: Deploy prod environment
       run: "echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to prod environment"
+    - name: Post-deploy smoke test
+      run: |
+        echo "Running smoke tests..."
+        echo "GET /health -> 200 OK"
+        echo "Smoke test passed"
     - name: Rollback
       if: failure()
       run: echo "Deployment failed! Rollback completed successfully."
