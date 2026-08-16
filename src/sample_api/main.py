@@ -52,7 +52,7 @@ async def log_requests(request: Request, call_next):
 @app.get("/")
 def read_root():
     logger.info("Wywołano endpoint główny /")
-    return {"status": "ok", "message": "API działa z logami pod Elasticsearch!"}
+    return {"status": "ok", "message": "API działa"}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int):
@@ -62,5 +62,4 @@ def read_item(item_id: int):
 @app.get("/healtz")
 def healtz():
     logger.info("Healtcheck")
-    return {""}
-#test
+    return {"result": "ok"}
