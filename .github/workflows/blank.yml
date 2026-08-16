@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   IMAGE_TAG: ${{ github.event_name  == 'release' &&  github.event.release.tag_name || github.sha}}  
 jobs:
-  Build:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -48,16 +48,16 @@ jobs:
         severity: 'CRITICAL,HIGH'
     - name: Push image
       run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-  Deploy-dev:
-    needs: Build
+  deploy-dev:
+    needs: build
     environment: dev
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || github.event_name  == 'release' 
     runs-on: ubuntu-latest
     steps:
     - name: Deploy Dev environment
       run: "echo Deploying image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} to dev environment"
-  Deploy-prod:
-    needs: Build
+  deploy-prod:
+    needs: deploy-dev
     environment: prod
     if: github.event_name  == 'release' 
     runs-on: ubuntu-latest
