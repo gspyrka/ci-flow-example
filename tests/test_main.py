@@ -17,7 +17,7 @@ def test_health():
     response = client.get("/healtz")
 
     assert response.status_code == 200
-    assert response.json() == {"ok"}
+    assert response.json() == {["ok"]}
 
 
 def test_get_user():
