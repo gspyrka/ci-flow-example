@@ -62,4 +62,4 @@ def read_item(item_id: int):
 @app.get("/healtz")
 def healtz():
     logger.info("Healtcheck")
-    return {""}
+    return {"ok"}
